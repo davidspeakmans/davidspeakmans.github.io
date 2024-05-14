@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My JavaScript Projects</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: black;
+            color: white;
+            margin: 0;
+            padding: 20px;
+            text-align: left;
+        }
+        .container {
+            max-width: 100%;
+            margin: auto;
+            padding: 0 20px;
+        }
+        .yellow {
+            color: #ffcc00;
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+        .green {
+            color: #00cc00;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .project-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .project-links li {
+            margin-bottom: 10px;
+        }
+        .project-links a {
+            color: blue;
+            text-decoration: none;
+            font-size: 18px;
+        }
+        .project-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* Media Query for Android Phones */
+        @media only screen and (max-width: 600px) {
+            .container {
+                padding: 0 10px;
+            }
+            .yellow {
+                font-size: 24px;
+            }
+            .green {
+                font-size: 18px;
+            }
+            .project-links a {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="yellow">Welcome to my homepage for JavaScript projects</div>
+        
+        <div class="green">Links to complete projects</div>
+        
+        <ul class="project-links">
+            <li><a href="#">1. Things to Do List generator</a></li>
+            <li><a href="#">2. General list creator</a></li>
+            <li><a href="#">3. JavaScript Tutorial</a></li>
+            <li><a href="#">4. Rock Scissors Paper Game</a></li>
+            
+            <!-- Add more project links here -->
+        </ul>
+    </div>
+</body>
+</html>
