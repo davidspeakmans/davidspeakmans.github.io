@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automatic Daily Journal</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 10px;
+        }
+        button {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Automatic Daily Journal</h1>
+    <h2 id="dateDisplay"></h2>
+
+    <div id="journalSection"></div>
+
+    <button onclick="saveJournal()">Save Journal</button>
+    <button onclick="viewJournal()">View Journal</button>
+    <button onclick="deleteJournal()">Delete Journal</button>
+    <button onclick="editJournal()">Edit Journal</button>
+
+    <pre id="output"></pre>
+
+    <script>
+        const questions = {
+            "Health (Physical and Mental)": [
+                "How did I feel physically and mentally today?",
+                "What unhealthy habits do I need to change, and how can I start?",
+                "How am I managing stress, and what can I do to reduce it?",
+                "Did I take time to rest and recharge today?",
+                "What is one thing I can do tomorrow to improve my physical or mental health?"
+            ],
+            "Relationships (Personal and Social)": [
+                "How did I communicate my feelings and needs in my relationships today?",
+                "What boundaries do I need to set, and with whom?",
+                "How can I show appreciation to someone important in my life?",
+                "How am I contributing to the health of my relationships?",
+                "What relationship am I most grateful for, and why?"
+            ],
+            "Career and Work": [
+                "What did I accomplish at work today, and how do I feel about it?",
+                "How aligned is my current career with my long-term goals?",
+                "What challenges did I face at work today, and how did I handle them?",
+                "What skill do I want to develop further in my career?",
+                "How am I balancing work and personal life?"
+            ],
+            "Finances": [
+                "How did I spend my money today? Was it aligned with my financial goals?",
+                "What can I do to save more money this month?",
+                "How am I planning for my long-term financial goals?",
+                "How does my current financial situation make me feel?",
+                "What financial habits do I need to change, and why?"
+            ],
+            "Personal Growth and Spirituality": [
+                "What did I learn about myself today?",
+                "How am I living in alignment with my core values?",
+                "What limiting beliefs do I need to release?",
+                "What’s one fear that’s holding me back, and how can I face it?",
+                "What inspires me to keep growing and evolving?"
+            ]
+        };
+
+        const journalKey = "journal_"; // Prefix for journal entries in localStorage
+
+        // Display today's date
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById("dateDisplay").textContent = `Journal Entry for: ${today}`;
+
+        // Create a form to display journal questions
+        const journalSection = document.getElementById('journalSection');
+        for (const category in questions) {
+            const categoryTitle = document.createElement('h3');
+            categoryTitle.textContent = category;
+            journalSection.appendChild(categoryTitle);
+            
+            questions[category].forEach(question => {
+                const label = document.createElement('label');
+                label.textContent = question;
+                journalSection.appendChild(label);
+
+                const textarea = document.createElement('textarea');
+                textarea.id = question;
+                journalSection.appendChild(textarea);
+            });
+        }
+
+        // Save journal entry
+        function saveJournal() {
+            const journalEntry = {};
+            for (const category in questions) {
+                questions[category].forEach(question => {
+                    const answer = document.getElementById(question).value;
+                    journalEntry[question] = answer;
+                });
+            }
+            localStorage.setItem(journalKey + today, JSON.stringify(journalEntry));
+            alert("Journal entry saved!");
+        }
+
+        // View journal entry
+        function viewJournal() {
+            const entry = localStorage.getItem(journalKey + today);
+            if (entry) {
+                const journalData = JSON.parse(entry);
+                let outputText = `Journal for ${today}:\n\n`;
+                for (const category in questions) {
+                    outputText += category + ":\n";
+                    questions[category].forEach(question => {
+                        outputText += `${question}\n${journalData[question] || ''}\n\n`;
+                    });
+                }
+                document.getElementById('output').textContent = outputText;
+            } else {
+                alert("No journal entry found for today.");
+            }
+        }
+
+        // Edit journal entry
+        function editJournal() {
+            const entry = localStorage.getItem(journalKey + today);
+            if (entry) {
+                const journalData = JSON.parse(entry);
+                for (const category in questions) {
+                    questions[category].forEach(question => {
+                        document.getElementById(question).value = journalData[question] || '';
+                    });
+                }
+                alert("Journal loaded for editing.");
+            } else {
+                alert("No journal entry found to edit.");
+            }
+        }
+
+        // Delete journal entry
+        function deleteJournal() {
+            const confirmDelete = confirm("Are you sure you want to delete today's journal?");
+            if (confirmDelete) {
+                localStorage.removeItem(journalKey + today);
+                alert("Journal entry deleted.");
+            }
+        }
+    </script>
+</body>
+</html>
