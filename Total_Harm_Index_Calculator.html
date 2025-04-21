@@ -1,0 +1,92 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Total Harm Index Calculator</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; max-width: 700px; margin: auto; }
+    h1 { font-size: 1.5em; }
+    label { display: block; margin-top: 10px; font-weight: bold; }
+    input { width: 100%; padding: 8px; margin-top: 5px; }
+    button { margin-top: 20px; padding: 10px 20px; font-size: 1em; cursor: pointer; }
+    .result { margin-top: 20px; font-weight: bold; }
+    .description { margin-bottom: 20px; font-size: 0.95em; background: #f4f4f4; padding: 15px; border-radius: 5px; }
+  </style>
+</head>
+<body>
+  <h1>Total Harm Index Calculator</h1>
+
+  <div class="description">
+    <strong>What these scores mean:</strong><br>
+    <ul>
+      <li><strong>PHI</strong>: Past Harm Index, based on deaths and economic damage within the past year.</li>
+      <li><strong>FHI</strong>: Future Harm Index, based on projected deaths and economic harm over the next 50 years, adjusted by likelihood.</li>
+      <li><strong>THI</strong>: Total Harm Index, a single score combining both PHI and FHI on a logarithmic scale.</li>
+    </ul>
+    <strong>Formulas:</strong><br>
+    <code>PHI = log10(10^Death Score + 10^Economic Score)</code><br>
+    <code>FHI = log10((10^Threat Score + 10^Economic Score) × Probability)</code><br>
+    <code>THI = log10(10^PHI + 10^FHI)</code>
+  </div>
+
+  <label for="deathScore">PHI Death Score (1–10)</label>
+  <input type="number" id="deathScore" step="0.1" min="0" max="10">
+
+  <label for="economicScore">PHI Economic Score (1–10)</label>
+  <input type="number" id="economicScore" step="0.1" min="0" max="10">
+
+  <label for="threatScore">FHI Threat Score (1–10)</label>
+  <input type="number" id="threatScore" step="0.1" min="0" max="10">
+
+  <label for="futureEconomicScore">FHI Economic Score (1–10)</label>
+  <input type="number" id="futureEconomicScore" step="0.1" min="0" max="10">
+
+  <label for="probability">Likelihood (0.0–1.0)</label>
+  <input type="number" id="probability" step="0.01" min="0" max="1">
+
+  <button onclick="calculateTHI()">Calculate THI</button>
+  <button onclick="showChart()">Show THI Score Chart</button>
+
+  <div class="result" id="output"></div>
+
+  <script>
+    function calculateTHI() {
+      const d = parseFloat(document.getElementById('deathScore').value);
+      const e = parseFloat(document.getElementById('economicScore').value);
+      const t = parseFloat(document.getElementById('threatScore').value);
+      const ef = parseFloat(document.getElementById('futureEconomicScore').value);
+      const p = parseFloat(document.getElementById('probability').value);
+
+      if (isNaN(d) || isNaN(e) || isNaN(t) || isNaN(ef) || isNaN(p)) {
+        document.getElementById('output').innerText = "Please fill in all values.";
+        return;
+      }
+
+      const phi = Math.log10(Math.pow(10, d) + Math.pow(10, e));
+      const fhiRaw = (Math.pow(10, t) + Math.pow(10, ef)) * p;
+      const fhi = Math.log10(fhiRaw);
+      const thi = Math.log10(Math.pow(10, phi) + Math.pow(10, fhi));
+
+      document.getElementById('output').innerHTML =
+        `PHI = ${phi.toFixed(2)}<br>` +
+        `FHI = ${fhi.toFixed(2)}<br>` +
+        `THI = ${thi.toFixed(2)}`;
+    }
+
+    function showChart() {
+      alert(`THI Score Chart:
+1 = Minimal: 10 deaths / $10M
+2 = Isolated: 100 deaths / $100M
+3 = Local Disaster: 1,000 deaths / $1B
+4 = Regional Emergency: 10,000 deaths / $10B
+5 = National Crisis: 100,000 deaths / $100B
+6 = Major Catastrophe: 1M deaths / $1T
+7 = Mass Casualty Event: 10M deaths / $10T
+8 = Humanitarian Collapse: 100M deaths / $100T
+9 = Global Catastrophe: 1B deaths / $1Q
+10 = Extinction-Level Event: 10B deaths / $10Q`);
+    }
+  </script>
+</body>
+</html>
