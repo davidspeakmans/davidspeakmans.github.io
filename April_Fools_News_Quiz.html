@@ -1,0 +1,316 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>The Greater Fool Quiz</title>
+  <style>
+    .question { font-size: 1.5em; }
+    .result { font-size: 1.5em; color: green; }
+    .score { font-size: 1.5em; color: #333; }
+    body { font-family: sans-serif; background: #f0f0f0; padding: 20px; }
+    .quiz-container { background: white; border-radius: 12px; padding: 20px; max-width: 600px; margin: auto; box-shadow: 0 0 10px rgba(0,0,0,0.2); }
+    .question { font-weight: bold; margin-bottom: 10px; }
+    .option { margin-bottom: 10px; cursor: pointer; padding: 10px; border: 1px solid #ccc; border-radius: 6px; background: #fafafa; }
+    .option:hover { background: #e0f7fa; }
+    .result { font-size: 1.2em; font-weight: bold; margin-top: 20px; }
+    .score { margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <div id="question" class="question"></div>
+    <div id="option1" class="option"></div>
+    <div id="option2" class="option"></div>
+    <div id="result" class="result"></div>
+    <div id="score" class="score"></div>
+  </div>
+
+  <script>
+    const quizData = [
+  {
+    "date": "April 1",
+    "options": [
+      "Trump proposes replacing the U.S. dollar with a gold-plated 'Trump Coin,' usable only at Mar-a-Lago gift shops.",
+      "Trump-appointed judge rules that endangered species protections don\u2019t apply to 'unlikeable animals,' sparking legal chaos over wolves, bats, and snakes."
+    ],
+    "realIndex": 1
+  },
+  {
+    "date": "April 2",
+    "options": [
+      "Musk claims Tesla's new 'Smart Pavement' can heal itself with AI-powered empathy.",
+      "Musk announces that Grok AI will write all of his future tweets to avoid SEC violations."
+    ],
+    "realIndex": 1
+  },
+  {
+    "date": "April 3",
+    "options": [
+      "Marjorie Taylor Greene proposes a bill banning libraries from stocking books by any author who\u2019s appeared on CNN.",
+      "Marjorie Taylor Greene claims wind turbines are 'stealing our air' and should be shut down to protect freedom."
+    ],
+    "realIndex": 1
+  },
+  {
+    "date": "April 4",
+    "options": [
+      "Trump sues the Lincoln Memorial for 'intellectual theft' after misquoting himself.",
+      "Trump sues Truth Social co-founders to increase his control over the company."
+    ],
+    "realIndex": 1
+  },
+  {
+    "date": "April 5",
+    "options": [
+      "Elon Musk claims Neuralink will allow users to play Candy Crush with their thoughts by 2026.",
+      "Elon Musk livestreams himself throwing shade at journalists who criticized Tesla\u2019s autopilot crashes."
+    ],
+    "realIndex": 1
+  },
+  {
+    "date": "April 6",
+    "options": [
+      "Texas GOP introduces bill to ban electric vehicles from rural highways to 'preserve freedom of the open road.'",
+      "Texas GOP lawmakers call for a bill to exempt all gas-powered vehicles from emissions testing."
+    ],
+    "realIndex": 1
+  },
+  {
+    "date": "April 7",
+    "options": [
+      "Musk announces plan to colonize the moon using modified Teslas with rocket boosters.",
+      "Musk says X (Twitter) will ban users who criticize SpaceX 'without understanding orbital mechanics.'"
+    ],
+    "realIndex": 1
+  },
+  {
+    "date": "April 8",
+    "options": [
+      "Trump claims solar eclipses are 'a hoax by the deep state to scare people indoors.'",
+      "Trump blames solar eclipse coverage for his low rally turnout in Ohio."
+    ],
+    "realIndex": 1
+  },
+  {
+    "date": "April 9",
+    "options": [
+      "Lauren Boebert demands that schools teach 'Biblical Geometry' alongside Common Core.",
+      "Lauren Boebert caught vaping in a Colorado public school bathroom during a parent-teacher conference."
+    ],
+    "realIndex": 1
+  },
+  {
+    "date": "April 10",
+    "options": [
+      "Ron DeSantis declares Disney World a 'hostile ideological zone' requiring a loyalty pledge for entry.",
+      "Ron DeSantis signs law stripping Disney of self-governance status in Florida."
+    ],
+    "realIndex": 1
+  },
+  {
+    "date": "April 11",
+    "options": [
+      "Trump demands Mount Rushmore be updated to feature his head in gold leaf.",
+      "Trump tells NRA crowd that he\u2019d have personally shot the Uvalde shooter if he were president."
+    ],
+    "realIndex": 1
+  },
+  {
+    "date": "April 12",
+    "options": [
+      "Elon Musk announces \u2018X-Pets,\u2019 robot dogs programmed to bark Libertarian slogans.",
+      "Elon Musk blames AI safety rules for the delay in Tesla's latest Autopilot rollout."
+    ],
+    "realIndex": 1
+  },
+  {
+    "date": "April 13",
+    "options": [
+      "Republican lawmakers propose a bill requiring all classrooms to fly a \u2018God, Guns, and Gas\u2019 flag.",
+      "Tennessee Republicans advance bill allowing teachers to carry handguns in schools without training."
+    ],
+    "realIndex": 1
+  },
+  {
+    "date": "April 14",
+    "options": [
+      "Trump says trees are a Democrat hoax to block 5G signals.",
+      "Trump calls for mass firing of civil servants in federal agencies and replacing them with MAGA loyalists."
+    ],
+    "realIndex": 1
+  },
+  {
+    "date": "April 15",
+    "options": [
+      "Elon Musk announces a new car color: 'Free Speech Gray,' which gets darker when liberals complain.",
+      "Elon Musk criticizes NPR and PBS as 'state-affiliated media' on X, causing them to leave the platform."
+    ],
+    "realIndex": 1
+  },
+  {
+    "date": "April 16",
+    "options": [
+      "Trump calls climate change 'a rumor started by Canadians who want more Florida.'",
+      "Trump promises to end all climate regulations on his first day back in office."
+    ],
+    "realIndex": 1
+  },
+  {
+    "date": "April 17",
+    "options": [
+      "Musk unveils Mars cryptocurrency: \u2018SpaceCoin,\u2019 usable only in Martian colonies.",
+      "Musk says the SEC is investigating him unfairly because 'aliens control the stock market.'"
+    ],
+    "realIndex": 1
+  },
+  {
+    "date": "April 18",
+    "options": [
+      "Trump issues NFT of himself defeating George Washington in a wrestling match.",
+      "Trump launches a second NFT collection despite ongoing fraud lawsuits."
+    ],
+    "realIndex": 1
+  },
+  {
+    "date": "April 19",
+    "options": [
+      "Marjorie Taylor Greene proposes that Congress adopt the Bible as the official national legal code.",
+      "Marjorie Taylor Greene claims Biden is \u201cpossessed by the spirit of Karl Marx.\u201d"
+    ],
+    "realIndex": 1
+  },
+  {
+    "date": "April 20",
+    "options": [
+      "Musk says SpaceX will launch a bong into orbit to celebrate 4/20 and \u2018test flame resistance.\u2019",
+      "Musk celebrates 4/20 by tweeting a weed joke and tanking Tesla stock 6%."
+    ],
+    "realIndex": 1
+  },
+  {
+    "date": "April 21",
+    "options": [
+      "Trump claims the pyramids were built by 'very fine people' who believed in voter ID.",
+      "Trump warns that immigrants are 'poisoning the blood of our country' during a campaign rally."
+    ],
+    "realIndex": 1
+  },
+  {
+    "date": "April 22",
+    "options": [
+      "Musk says Earth Day should be replaced by Mars Day to inspire 'real planetary ambition.'",
+      "Musk shares conspiracy video calling climate change 'a religion for losers' on X."
+    ],
+    "realIndex": 1
+  },
+  {
+    "date": "April 23",
+    "options": [
+      "Jim Jordan proposes giving AR-15s to border agents disguised as taco trucks.",
+      "Jim Jordan holds hearings accusing FBI of political bias for investigating pro-Trump militias."
+    ],
+    "realIndex": 1
+  },
+  {
+    "date": "April 24",
+    "options": [
+      "Trump calls for demolishing the Washington Monument and rebuilding it with his name on top.",
+      "Trump says he\u2019ll jail journalists who publish leaks about his second-term agenda."
+    ],
+    "realIndex": 1
+  },
+  {
+    "date": "April 25",
+    "options": [
+      "Elon Musk announces the 'X-Pill'\u2014a supplement that helps you believe you're right online.",
+      "Elon Musk reposts fake crime statistics targeting Black Americans and refuses to apologize."
+    ],
+    "realIndex": 1
+  },
+  {
+    "date": "April 26",
+    "options": [
+      "Trump unveils new campaign slogan: \u2018Make Gasoline Cheap Again, Burn Baby Burn.\u2019",
+      "Trump says he\u2019ll eliminate the Department of Energy to 'stop the war on gas stoves.'"
+    ],
+    "realIndex": 1
+  },
+  {
+    "date": "April 27",
+    "options": [
+      "Musk claims he will livestream a SpaceX launch from a GoPro strapped to a bald eagle.",
+      "Musk shares video mocking Ukrainian soldiers and says \u2018war isn\u2019t that complicated.\u2019"
+    ],
+    "realIndex": 1
+  },
+  {
+    "date": "April 28",
+    "options": [
+      "Trump proposes replacing school buses with stretch limos 'to inspire ambition.'",
+      "Trump says he\u2019ll fund private schools using money from seized \u2018woke university endowments.\u2019"
+    ],
+    "realIndex": 1
+  },
+  {
+    "date": "April 29",
+    "options": [
+      "Musk says Tesla\u2019s next innovation is a car horn that insults cyclists with AI sarcasm.",
+      "Musk suggests allowing verified users on X to edit other people's tweets."
+    ],
+    "realIndex": 1
+  },
+  {
+    "date": "April 30",
+    "options": [
+      "Trump ends month claiming whales are dying because they 'don\u2019t respect America anymore.'",
+      "Trump blames offshore wind farms for whale deaths, despite scientific consensus to the contrary."
+    ],
+    "realIndex": 1
+  }
+];
+
+    let current = 0;
+    let userScore = 0;
+    let trumpScore = 0;
+
+    function loadQuestion() {
+      const q = quizData[current];
+      const real = { text: q.options[q.realIndex], isReal: true };
+      const fake = { text: q.options[1 - q.realIndex], isReal: false };
+      const options = [real, fake];
+      for (let i = options.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [options[i], options[j]] = [options[j], options[i]];
+      }
+      document.getElementById("question").textContent = "Day " + (current + 1) + ": Which one is REAL news from April?";
+      document.getElementById("option1").textContent = options[0].text;
+      document.getElementById("option2").textContent = options[1].text;
+      document.getElementById("option1").onclick = () => handleClick(options[0].isReal);
+      document.getElementById("option2").onclick = () => handleClick(options[1].isReal);
+      document.getElementById("result").textContent = "";
+    }
+
+    function handleClick(isCorrect) {
+      if (isCorrect) {
+        document.getElementById("result").textContent = "Can't Fool You!!!";
+        userScore++;
+      } else {
+        document.getElementById("result").textContent = "Trump scores a point!";
+        trumpScore++;
+      }
+      document.getElementById("score").textContent = "Score: You " + userScore + " – Trump " + trumpScore;
+      current++;
+      if (current < quizData.length) {
+        setTimeout(loadQuestion, 1500);
+      } else {
+        setTimeout(() => {
+          document.querySelector(".quiz-container").innerHTML = "<h2>Final Score</h2><p>You: " + userScore + "<br>Trump: " + trumpScore + "</p>";
+        }, 2000);
+      }
+    }
+
+    loadQuestion();
+  </script>
+</body>
+</html>
